@@ -1,0 +1,11 @@
+.gap { margin-top: var(--jt-space-3); }
+.states { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: var(--jt-space-4); align-items: center; }
+.fields { display: flex; flex-direction: column; gap: var(--jt-space-2); max-width: 460px; }
+.fields label { color: var(--jt-text-muted); font-size: var(--jt-fs-sm); }
+.field { display: flex; align-items: center; gap: var(--jt-space-1); }
+.search { max-width: 280px; margin-bottom: var(--jt-space-3); }
+.icons { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: var(--jt-space-1); }
+.icon { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: var(--jt-space-3) var(--jt-space-1);
+  border-radius: var(--jt-radius-md); }
+.icon:hover { background: color-mix(in srgb, var(--jt-accent) 10%, transparent); }
+.icon small { color: var(--jt-text-muted); font-size: var(--jt-fs-2xs); text-align: center; overflow-wrap: anywhere; }

@@ -1,0 +1,101 @@
+<header class="top">
+  <div class="brand">
+    <span class="brand-mark" aria-hidden="true"><jt-icon name="checklist" /></span>
+    <div>
+      <h1>&#64;jambotron/aria-components</h1>
+      <p>Angular UI components on Angular Aria and CDK — no Material</p>
+    </div>
+  </div>
+  <div class="switches">
+    <jt-theme-toggle />
+  </div>
+</header>
+
+<main>
+  <section class="jt-panel" aria-labelledby="ex1">
+    <h2 id="ex1"><span>1</span> Status badges</h2>
+    <p class="lead">The tone comes from the status; the dot breathes when alive, blinks while busy, shakes once on an error.
+      Hover for the meaning of the color. Motion stops with "reduce motion".</p>
+    <div class="row">
+      @for (status of statuses; track status) { <jt-badge [status]="status" /> }
+      <jt-badge status="parked" [tones]="{ parked: 'info' }" />
+      <jt-badge tone="accent" label="beta" [dot]="false" />
+    </div>
+    <pre class="snippet">&lt;jt-badge [status]="vm.status" /&gt;   &lt;jt-badge status="parked" [tones]="{{ '{' }} parked: 'info' {{ '}' }}" /&gt;</pre>
+  </section>
+
+  <section class="jt-panel" aria-labelledby="ex2">
+    <h2 id="ex2"><span>2</span> Buttons, dialogs, toasts</h2>
+    <p class="lead">Dialogs run on CDK Dialog: focus is trapped, Esc closes, focus returns to the button. "Delete" waits for
+      the typed name and runs the action inside the dialog; "Rotate keys" fails on purpose and keeps the error in the dialog.</p>
+    <div class="row">
+      <button class="jt-button jt-button--filled" (click)="simple()">Confirm</button>
+      <button class="jt-button jt-button--filled jt-button--danger" (click)="dangerous()"><jt-icon name="delete" [size]="18" /> Delete…</button>
+      <button class="jt-button jt-button--outlined" (click)="failing()">Rotate keys</button>
+      <span class="jt-muted">{{ result() }}</span>
+    </div>
+    <div class="row gap">
+      <button class="jt-button jt-button--outlined" (click)="toasts.success('Saved')">Success toast</button>
+      <button class="jt-button jt-button--outlined" (click)="toasts.info('Backup starts at 01:30 UTC')">Info toast</button>
+      <button class="jt-button jt-button--outlined jt-button--danger" (click)="toasts.error('Deploy failed: port 80 is busy', 'Retry')">Error toast</button>
+      <button class="jt-button jt-button--filled" [disabled]="busy()" (click)="quick()">
+        @if (busy()) { <jt-spinner [diameter]="16" /> } Quick action
+      </button>
+      <button class="jt-button">Text button</button>
+      <button class="jt-icon-button" aria-label="Refresh"><jt-icon name="refresh" /></button>
+    </div>
+    <pre class="snippet">dialogs.confirm({{ '{' }} message: 'Delete?', danger: true, confirmName: project.name, action: () =&gt; api.delete(id) {{ '}' }})
+toasts.action(api.clearCache(), 'Cache cleared', busy).subscribe();</pre>
+  </section>
+
+  <section class="jt-panel" aria-labelledby="ex3">
+    <h2 id="ex3"><span>3</span> Tabs, messages, states</h2>
+    <p class="lead">Tabs from <code>&lt;ng-template jtTab&gt;</code>: arrow keys, Home / End, content created on first open.</p>
+    <jt-tabs [(selected)]="tab" label="Examples">
+      <ng-template jtTab="alerts" label="Alerts">
+        <jt-alert>Backups run every night at 01:30 UTC.</jt-alert>
+        <jt-alert tone="success">All three hosts are healthy.</jt-alert>
+        <jt-alert tone="warning">Disk on proxmox-01 is 87% full.</jt-alert>
+        <jt-alert tone="danger">Host incus-01 is unreachable.</jt-alert>
+      </ng-template>
+      <ng-template jtTab="states" label="Loading and empty">
+        <div class="states">
+          <jt-loading-state />
+          <jt-empty-state title="No projects yet" message="Deploy the first one from a template or a ZIP.">
+            <button class="jt-button jt-button--filled"><jt-icon name="add" [size]="18" /> New project</button>
+          </jt-empty-state>
+        </div>
+      </ng-template>
+      <ng-template jtTab="fields" label="Fields">
+        <div class="fields">
+          <label for="pwd">Password</label>
+          <div class="field"><input #pwd id="pwd" class="jt-input" type="password" value="correct horse battery staple"><jt-password-toggle [target]="pwd" /></div>
+          <label for="url">Push URL (a secret that is not a password)</label>
+          <div class="field"><input #url id="url" class="jt-input" type="text" autocomplete="off" value="https://status.example.com/api/push/42c2dce0"><jt-password-toggle [target]="url" [mask]="true" /></div>
+        </div>
+      </ng-template>
+      <ng-template jtTab="disabled" label="Disabled" [disabled]="true">never shown</ng-template>
+    </jt-tabs>
+  </section>
+
+  <section class="jt-panel" aria-labelledby="ex4">
+    <h2 id="ex4"><span>4</span> Icons</h2>
+    <p class="lead">{{ icons().length }} SVG icons with Material Symbols names — no icon font. Add your own with <code>provideJtIcons()</code>.</p>
+    <input class="jt-input search" type="search" placeholder="Filter icons" aria-label="Filter icons"
+           [value]="iconFilter()" (input)="iconFilter.set($any($event.target).value)">
+    <div class="icons">
+      @for (icon of icons(); track icon) {
+        <span class="icon"><jt-icon [name]="icon" /><small>{{ icon }}</small></span>
+      } @empty {
+        <jt-empty-state icon="search" message="No icon with that name" />
+      }
+    </div>
+  </section>
+</main>
+
+<footer class="foot">
+  Deployed on <a href="https://jambotron.com" target="_blank" rel="noopener">jambotron.com</a> ·
+  also: <a href="https://aria-grid-demo.jambocheck.com" target="_blank" rel="noopener">&#64;jambotron/aria-grid</a>,
+  <a href="https://aria-markdown-editor-demo.jambocheck.com" target="_blank" rel="noopener">&#64;jambotron/aria-markdown-editor</a> ·
+  source <a href="https://gitea.jambotron.com/jambotron_gang/aria-components-demo" target="_blank" rel="noopener">aria-components-demo</a>
+</footer>
